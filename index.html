@@ -1,0 +1,248 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>Gather Health Concept · Gaurav Basantani</title>
+<meta name="description" content="A Gather Connect call heard a pill name as hydroxyzine; the patient's hospital discharge list and pharmacy claim say hydralazine. An unofficial concept for Gather Care by Gaurav Basantani, with a made-up patient and clinician.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+<style>
+/* One screen, one decision. Gather Care brings together "patient conversations, clinical records,
+   claims, hospital visits" and should "make sources, timing, and uncertainty easy to understand"
+   and "support quick feedback and correction" (the posting). A made-up nurse practitioner reviews
+   the summary of a made-up patient's Gather Connect call. On the phone, one pill name was unclear:
+   it was heard as hydroxyzine; her discharge list and pharmacy claim say hydralazine (an ISMP
+   confused-name pair). The summary flags it; one tap corrects it. A proposal, not a current feature. */
+:root{
+  --bg:#fdfbef; --page-ink:#053646; --page-muted:#3d5a63; --ok:#0b5a3a; --bad:#9a3412;
+  --w-bg:#ffffff; --w-2:#f7f5ea; --chrome:#f1efe3; --w-line:rgba(5,54,70,.12); --w-line2:rgba(5,54,70,.26);
+  --w-ink:#06232e; --w-muted:#405860; --src:#2d4a53;
+  --warn-bg:#fff4e8; --warn-line:rgba(166,84,27,.45); --warn-ink:#8a3c0b; --mark:#fde3c4;
+  --btn:#004d47; --btn-ink:#ffffff; --b2:#ffffff; --b2-ink:#053646;
+  --pill-bg:#fde3c4; --pill-ink:#6b2e07; --chip-bg:#eef1ee; --chip-line:rgba(5,54,70,.22);
+  --sans:"Inter",system-ui,-apple-system,"Segoe UI",Arial,sans-serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#071a20; --page-ink:#eef4f2; --page-muted:#b4c6c8; --ok:#7fe0b0; --bad:#ffab85;
+  --w-bg:#0e252d; --w-2:#132e37; --chrome:#163540; --w-line:rgba(230,244,242,.12); --w-line2:rgba(230,244,242,.26);
+  --w-ink:#eef4f2; --w-muted:#b8c9cb; --src:#cfdcdd;
+  --warn-bg:#2c1c10; --warn-line:rgba(255,171,133,.45); --warn-ink:#ffbd99; --mark:#5a3416;
+  --btn:#7fd6c8; --btn-ink:#04211e; --b2:#163540; --b2-ink:#eef4f2;
+  --pill-bg:#5a3416; --pill-ink:#ffe0c7; --chip-bg:#163540; --chip-line:rgba(230,244,242,.3); color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#071a20; --page-ink:#eef4f2; --page-muted:#b4c6c8; --ok:#7fe0b0; --bad:#ffab85;
+  --w-bg:#0e252d; --w-2:#132e37; --chrome:#163540; --w-line:rgba(230,244,242,.12); --w-line2:rgba(230,244,242,.26);
+  --w-ink:#eef4f2; --w-muted:#b8c9cb; --src:#cfdcdd;
+  --warn-bg:#2c1c10; --warn-line:rgba(255,171,133,.45); --warn-ink:#ffbd99; --mark:#5a3416;
+  --btn:#7fd6c8; --btn-ink:#04211e; --b2:#163540; --b2-ink:#eef4f2;
+  --pill-bg:#5a3416; --pill-ink:#ffe0c7; --chip-bg:#163540; --chip-line:rgba(230,244,242,.3); color-scheme:dark}
+*{box-sizing:border-box}
+html,body{margin:0}
+html{font-size:17px;-webkit-text-size-adjust:100%}
+body{background:var(--bg);color:var(--page-ink);font:1rem/1.45 var(--sans);padding:18px max(16px,env(safe-area-inset-right,0px)) 24px max(16px,env(safe-area-inset-left,0px))}
+p,h1,h2,h3{margin:0}
+button{font:inherit;color:inherit;cursor:pointer}
+.page{max-width:1120px;margin:0 auto;display:grid;gap:14px}
+.head{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,400px);gap:8px 40px;align-items:end}
+.eyebrow{font:700 .84rem var(--sans);letter-spacing:.12em;text-transform:uppercase;color:var(--page-muted);margin-bottom:6px}
+h1{font:600 clamp(1.5rem,3vw,2.1rem)/1.15 var(--sans);letter-spacing:-.02em}
+.now{border-left:4px solid var(--page-muted);padding:2px 0 2px 12px;min-height:44px;display:flex;align-items:center}
+.now.bad{border-color:var(--bad)} .now.ok{border-color:var(--ok)}
+.now p{font-size:1rem}
+.now.bad p{color:var(--bad)} .now.ok p{color:var(--ok)}
+.now b{font-weight:700}
+/* the app window: Gather Care, one patient, the call summary (quiet chrome, no Gather mark) */
+.window{background:var(--w-bg);color:var(--w-ink);border:1px solid var(--w-line2);border-radius:16px;overflow:hidden}
+.chrome{display:flex;gap:7px;padding:10px 16px;background:var(--chrome);border-bottom:1px solid var(--w-line)}
+.chrome i{width:10px;height:10px;border-radius:50%;background:var(--w-line2)}
+.nav{display:flex;align-items:center;gap:6px;padding:9px 22px;border-bottom:1px solid var(--w-line);cursor:default}
+.nav span{font-size:.86rem;font-weight:600;color:var(--w-muted);padding:4px 10px;border-radius:8px}
+.nav span.on{color:var(--w-ink);background:var(--w-2)}
+.nav .who{margin-left:auto;font-weight:500;font-size:.86rem;padding:0}
+.ph{display:flex;align-items:center;flex-wrap:wrap;gap:6px 12px;padding:14px 22px 4px;cursor:default}
+.ph h2{font:700 1.4rem/1.2 var(--sans);letter-spacing:-.01em}
+.pill{font:700 .84rem var(--sans);letter-spacing:.06em;text-transform:uppercase;background:var(--pill-bg);color:var(--pill-ink);border-radius:999px;padding:4px 10px}
+.pill.grey{background:var(--chip-bg);color:var(--w-muted)}
+.facts{display:flex;flex-wrap:wrap;gap:4px 24px;padding:0 22px 12px;font-size:.9rem;color:var(--w-muted);cursor:default;border-bottom:1px solid var(--w-line)}
+.facts b{color:var(--w-ink);font-weight:600}
+.grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,470px);gap:24px;padding:16px 22px 18px;align-items:start}
+.sum{display:grid;gap:8px;cursor:default;min-width:0}
+.sum h3{font:700 1.05rem var(--sans)}
+.sum .when{font-size:.9rem;color:var(--w-muted)}
+.items{list-style:none;margin:4px 0 0;padding:0;display:grid}
+.items li{padding:11px 0;border-bottom:1px solid var(--w-line);display:grid;gap:3px}
+.items li:last-child{border-bottom:0}
+.items .t{font-size:1.06rem;line-height:1.35}
+.items .s{font-size:.86rem;color:var(--src)}
+.items li.hit{background:var(--warn-bg);box-shadow:inset 4px 0 0 var(--warn-ink);padding-left:14px;padding-right:10px;border-radius:0 8px 8px 0}
+.items mark{background:var(--mark);color:inherit;padding:0 3px;border-radius:4px;text-decoration:underline dotted 2px;text-underline-offset:3px}
+.items li.hit mark{background:transparent;padding:0}
+.tag{font:700 .84rem var(--sans);color:var(--warn-ink);letter-spacing:.04em;text-transform:uppercase}
+/* the check */
+.check{border:2px solid var(--warn-line);background:var(--warn-bg);border-radius:14px;padding:16px;display:grid;gap:12px;min-width:0}
+.check.closed{border-color:var(--w-line2);background:var(--w-2)}
+.ck{display:flex;align-items:flex-start;gap:10px;cursor:default}
+.dot{width:22px;height:22px;border-radius:50%;border:2px solid var(--warn-ink);color:var(--warn-ink);display:grid;place-items:center;font:700 .84rem var(--sans);flex:none;margin-top:2px}
+.dot.ok{border-color:var(--w-muted);color:var(--w-muted)}
+.ck b{display:block;font-weight:700;font-size:1.12rem;line-height:1.3;color:var(--w-ink)}
+.ck .sub{display:block;font-size:.95rem;color:var(--w-ink);margin-top:3px}
+.srcs{list-style:none;margin:0;padding:0;display:grid;gap:6px;cursor:default}
+.srcs li{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:2px 10px;background:var(--w-bg);border:1px solid var(--w-line2);border-radius:10px;padding:8px 11px;font-size:.95rem}
+.srcs .k{font-size:.84rem;color:var(--w-muted);font-weight:600}
+.srcs .d{font-size:.84rem;color:var(--w-muted);text-align:right;white-space:nowrap}
+.srcs .v{grid-column:1 / -1}
+.srcs .v b{font-weight:700}
+.why{font-size:.95rem;color:var(--w-ink);cursor:default}
+.acts{display:flex;flex-wrap:wrap;gap:8px}
+.b1{background:var(--btn);color:var(--btn-ink);border:0;border-radius:10px;padding:12px 18px;font-weight:700;font-size:1rem;min-height:48px}
+.b2{background:var(--b2);color:var(--b2-ink);border:1px solid var(--w-line2);border-radius:10px;padding:11px 15px;font-weight:600;font-size:.95rem;min-height:48px}
+.b1:disabled{opacity:.45;cursor:not-allowed}
+.b1:focus-visible,.b2:focus-visible,.wf button:focus-visible,textarea:focus-visible{outline:3px solid var(--btn);outline-offset:2px}
+.reason{display:grid;gap:8px}
+.reason label{font-size:1rem;font-weight:700}
+.reason small{font-size:.86rem;color:var(--w-muted)}
+textarea{font:inherit;font-size:1rem;color:var(--w-ink);background:var(--w-bg);border:1px solid var(--chip-line);border-radius:10px;padding:10px 12px;min-height:70px;resize:vertical;width:100%}
+.chip{display:inline-flex;align-items:center;font-size:.9rem;background:var(--chip-bg);border:1px solid var(--chip-line);border-radius:999px;padding:4px 12px;width:max-content;max-width:100%}
+.done{display:grid;gap:8px;font-size:.95rem;cursor:default}
+.done q{color:var(--w-muted)}
+.wf{display:flex;align-items:center;gap:8px;padding:10px 22px;border-top:1px solid var(--w-line);font-size:.86rem;color:var(--w-muted);background:var(--w-2)}
+.wf span{margin-right:auto}
+.wf button{white-space:nowrap;background:var(--w-bg);border:1px solid var(--chip-line);border-radius:8px;padding:6px 12px;font-size:.88rem;color:var(--w-ink);min-height:36px}
+.wf button:disabled{opacity:.45;cursor:default}
+.foot{font-size:.86rem;color:var(--page-muted);display:flex;flex-wrap:wrap;gap:4px 14px;justify-content:space-between}
+.foot a{color:inherit}
+@media(max-width:860px){
+  body{padding-top:14px}
+  .head{grid-template-columns:1fr;gap:8px}
+  .chrome{display:none}
+  .nav{padding:7px 12px}
+  .nav span:not(.who){display:none}
+  .nav .who{margin-left:0}
+  .ph{padding:10px 12px 2px}
+  .ph h2{font-size:1.18rem}
+  .facts{padding:0 12px 8px;gap:2px 14px;font-size:.84rem}
+  .grid{grid-template-columns:1fr;padding:10px 12px 12px;gap:14px}
+  .check{order:-1;padding:12px;gap:10px}
+  .wf{padding:8px 12px}
+}
+@media(max-width:380px){.eyebrow{letter-spacing:.06em}h1{font-size:1.36rem}.b1{padding:12px 14px}.facts{display:none}.ph{padding-bottom:10px}.ph h2{font-size:1.08rem}.pill{font-size:.84rem;padding:3px 8px}.srcs li{font-size:.9rem}.eyebrow{font-size:.84rem;letter-spacing:.04em}.ph{padding-top:8px}.check{gap:8px}.now{min-height:0}}
+</style>
+</head>
+<body>
+<main class="page">
+  <header class="head">
+    <div>
+      <p class="eyebrow">Design concept for Gather Care · unofficial</p>
+      <h1>The call heard “hydroxyzine.” Her records say hydralazine.</h1>
+    </div>
+    <div class="now" id="now" aria-live="polite"></div>
+  </header>
+
+  <section class="window" aria-label="One patient in Gather Care: phone check-in summary">
+    <div class="chrome" aria-hidden="true"><i></i><i></i><i></i></div>
+    <div class="nav"><span>Today</span><span class="on">Patients</span><span>Follow-ups</span><span class="who">Grace Mensah, NP</span></div>
+    <div class="ph">
+      <h2>Dorothy Keane, 81</h2>
+      <span class="pill" id="pill">Needs your check</span>
+    </div>
+    <div class="facts"><span>Hospital stay <b>Nov 9 to 12</b></span><span>Last visit <b>Oct 29</b></span><span>Gather Guide <b>Marisol Reyes</b></span></div>
+    <div class="grid">
+      <div class="sum">
+        <h3>Phone check-in summary</h3>
+        <p class="when">Gather Connect call · Wed Nov 18, 10:42 am · 6 min</p>
+        <ul class="items" id="items"></ul>
+      </div>
+      <div class="check" id="check"></div>
+    </div>
+    <div class="wf"><span>Made-up patient, clinician and data</span><button type="button" id="undo">Undo</button><button type="button" id="reset">Start over</button></div>
+  </section>
+
+  <footer class="foot"><span>By Gaurav Basantani · <a href="https://gauravbasantani.com">gauravbasantani.com</a> · <a href="walkthrough.mp4">38-second walkthrough</a></span><span>Unofficial concept, not affiliated · Not medical advice</span></footer>
+</main>
+
+<script>
+(function(){
+  // Hospital discharge list (Thu Nov 12) and pharmacy claim (Fri Nov 13): hydralazine 10 mg, 4 times a day, 120 tablets (30 days x 4).
+  // Call (Wed Nov 18, at 2:31): the name was heard as "hydroxyzine" with unclear audio. Both drugs come as 10 mg tablets.
+  var HEARD = "hydroxyzine", RECORD = "hydralazine", DOSE = "10 mg", TIMES = 4, DAYS = 30, QTY = TIMES*DAYS; // 120
+  var S0 = {step:"open", reason:""};
+  var s = JSON.parse(JSON.stringify(S0)), hist = [];
+  var $ = function(id){return document.getElementById(id);};
+  function esc(t){return t.replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[c];});}
+  function go(next){hist.push(JSON.parse(JSON.stringify(s))); s=next; render();}
+
+  function itemsHTML(){
+    var fixed = s.step==="fixed";
+    var r = '<li><span class="t">Dizzy when she stands up, most mornings this week.</span><span class="s">Her words at 1:05 in the call</span></li>';
+    if(fixed){
+      r += '<li><span class="t">New pill since the hospital: '+RECORD+' '+DOSE+', '+TIMES+' times a day.</span><span class="s">Corrected by you from her discharge list · Thu Nov 19</span></li>';
+    } else {
+      r += '<li class="hit"><span class="tag">Name unclear</span><span class="t">New pill since the hospital: <mark>'+HEARD+'</mark> '+DOSE+'.</span><span class="s">Heard at 2:31 in the call · unclear audio</span></li>';
+    }
+    r += '<li><span class="t">Wants a ride to her Wed Dec 2 visit.</span><span class="s">Her words at 4:40 · sent to Marisol</span></li>';
+    return r;
+  }
+  function head(){
+    return '<div class="ck"><span class="dot" aria-hidden="true">!</span><span><b>Check the pill name before it goes in her chart</b>'+
+      '<span class="sub">On the call: “the new one from the hospital, hydro… hydroxyzine, the ten.”</span></span></div>'+
+      '<ul class="srcs">'+
+      '<li><span class="k">Hospital discharge list</span><span class="d">Thu Nov 12</span><span class="v"><b>'+RECORD+'</b> '+DOSE+', '+TIMES+' times a day</span></li>'+
+      '<li><span class="k">Pharmacy claim</span><span class="d">Fri Nov 13</span><span class="v"><b>'+RECORD+'</b> '+DOSE+', '+QTY+' tablets</span></li>'+
+      '</ul>';
+  }
+  function checkHTML(){
+    if(s.step==="open"){
+      return head()+
+        '<p class="why">The names sound alike, and both come as '+DOSE+' tablets. No record lists '+HEARD+'.</p>'+
+        '<div class="acts"><button type="button" class="b1" id="fix">Change to '+RECORD+'</button>'+
+        '<button type="button" class="b2" id="asis">Keep '+HEARD+'</button></div>';
+    }
+    if(s.step==="reason"){
+      return head()+
+        '<div class="reason"><label for="why">Why is it '+HEARD+'?</label>'+
+        '<textarea id="why">'+esc(s.reason)+'</textarea>'+
+        '<small>Saved with the summary, and sent back to Gather Connect.</small>'+
+        '<div class="acts"><button type="button" class="b1" id="send" disabled>Save</button><button type="button" class="b2" id="cancel">Back</button></div></div>';
+    }
+    if(s.step==="sent"){
+      return head()+
+        '<div class="done"><span class="chip">Saved to her chart · Grace Mensah, NP</span><q>'+esc(s.reason)+'</q></div>';
+    }
+    return '<div class="ck"><span class="dot ok" aria-hidden="true">✓</span><span><b>Name changed to '+RECORD+'</b>'+
+      '<span class="sub">Your correction goes back to Gather Connect, so the next call can ask about it by name.</span></span></div>'+
+      '<div class="done"><span class="chip">Saved to her chart · Grace Mensah, NP</span></div>';
+  }
+  function nowHTML(){
+    if(s.step==="sent") return ['bad','<b>Saved:</b> her chart lists a pill none of her records show.'];
+    if(s.step==="fixed") return ['ok','<b>Fixed:</b> her chart names the pill on her discharge list.'];
+    return ['','Phone audio blurred one word.'];
+  }
+  function render(){
+    $("items").innerHTML = itemsHTML();
+    $("check").innerHTML = checkHTML();
+    $("check").className = "check"+(s.step==="fixed"?" closed":"");
+    var decided = s.step==="sent"||s.step==="fixed";
+    $("pill").textContent = decided?"Reviewed":"Needs your check"; $("pill").className = "pill"+(decided?" grey":"");
+    var n = nowHTML(); $("now").className = "now "+n[0]; $("now").innerHTML = '<p>'+n[1]+'</p>';
+    $("undo").disabled = hist.length===0;
+    var b;
+    if((b=$("fix"))) b.onclick=function(){go({step:"fixed",reason:""});};
+    if((b=$("asis"))) b.onclick=function(){go({step:"reason",reason:""});};
+    if((b=$("cancel"))) b.onclick=function(){go({step:"open",reason:""});};
+    var t=$("why");
+    if(t){
+      var send=$("send");
+      var upd=function(){s.reason=t.value; send.disabled=t.value.trim().length<10;};
+      t.oninput=upd; upd();
+      send.onclick=function(){if(t.value.trim().length>=10) go({step:"sent",reason:t.value.trim()});};
+    }
+  }
+  $("undo").onclick=function(){if(hist.length){s=hist.pop(); render();}};
+  $("reset").onclick=function(){hist=[]; s=JSON.parse(JSON.stringify(S0)); render();};
+  render();
+})();
+</script>
+</body>
+</html>
